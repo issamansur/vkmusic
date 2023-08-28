@@ -1,7 +1,8 @@
 import React from 'react';
 import './MusicCard.css'; // Файл со стилями
 
-const MusicCard = ({ imageUrl, title, author }) => {
+const MusicCard = (musicItem) => {
+  const { title, author, imageUrl } = musicItem;
   return (
     <div className="music-card">
       <img src={imageUrl} alt="Album Cover" className="music-avatar" />
