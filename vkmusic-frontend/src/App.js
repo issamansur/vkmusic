@@ -10,13 +10,17 @@ import { Search,
 } from '@vkontakte/vkui';
 import "@vkontakte/vkui/dist/vkui.css";
 
+import { Button, TextInput, Select } from "@gravity-ui/uikit";
+
 import { useState } from 'react';
 import axios from 'axios';
 
-import './App.css';
 import MusicList from './MusicLists/MusicList';
+import SearchBox from './SearchBox/SearchBox';
 
-const api = "https://humble-space-dollop-59xgx6jqgwqhq4-8000.app.github.dev";
+import './App.css';
+
+const api = "http://127.0.0.1:8000";
 
 function App() {
   const [searchText, setSearchText] = useState('');
@@ -27,7 +31,18 @@ function App() {
   };
 
   function searchQuery() {
-    axios.get(`${api}/music/${searchText}`
+    let headers = new Headers();
+
+    headers.append('Content-Type', 'application/json');
+    headers.append('Accept', 'application/json');
+  
+    headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+    headers.append('Access-Control-Allow-Credentials', 'true');
+
+    axios.get(`${api}/music/${searchText}`,
+    {
+      headers: headers
+    }
     ).then((response) => {
       console.log(response.data);
       setMusicList(response.data);
@@ -38,18 +53,21 @@ function App() {
 
   return (
     <div className="App">
+      <SearchBox />
+      {/*
       <View activePanel="card">
         <Panel id="card">
           <PanelHeader>Музыка ВК</PanelHeader>
-          <Search 
+          <Search
             placeholder='Поиск по песне или исполнителю...'
-            onChange={onChange}
+            //onChange={onChange}
             onFindButtonClick={searchQuery} 
           />
           <MusicList musicList={[]} />
           <Spacing size={16} />
         </Panel>
       </View>
+    */}
     </div>
   );
 }
