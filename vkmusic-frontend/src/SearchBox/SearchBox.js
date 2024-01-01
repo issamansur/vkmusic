@@ -1,12 +1,12 @@
 import { TextInput, Button, Select } from "@gravity-ui/uikit";
-import { useRef } from 'react';
+import { useState, useRef } from 'react';
 
-const SearchBox = () => {
+const SearchBox = (props) => {
     // Refs
     const inputRef = useRef();
 
     // State
-    // ...
+    const [selectedType, setSelectedType] = useState('1');
 
     // Handlers
     const handleKeyPress = (e) => {
@@ -21,24 +21,32 @@ const SearchBox = () => {
     // Components
     const itemSelectOptions = [
         { value: '1', content: 'Песня' },
-        { value: '2', content: 'Альбом' },
+        { value: '2', content: 'Плейлист' },
+        { value: '3', content: 'Альбом' },
     ];
 
     const ItemSelect = <Select
+        value={[selectedType]}
+        onUpdate={(value) => setSelectedType(value[0])}
+
         size="l"
         pin="round-brick"
         width={120}
-        defaultValue={['1']} 
-        options={itemSelectOptions} 
+        
+        options={itemSelectOptions}
+        defaultValue={['1']}
         />;
     
     const ActionButton = <Button
         size="l"
-        onClick={handleButtonClick}>Найти</Button>;
+        onClick={handleButtonClick}>
+            Найти
+    </Button>;
 
     // Functions
     const search = (query) => {
-        console.log(query);
+        let type = selectedType;
+        props.onSearch(query, type);
     }
 
     return (

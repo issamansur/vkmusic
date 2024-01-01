@@ -1,11 +1,11 @@
 import React from 'react';
-import './MusicCard.css'; // Файл со стилями
+import './PlaylistCard.css'; // Файл со стилями
 
-const MusicCard = (musicItem) => {
-  const { title, author, imageUrl } = musicItem;
+const PlaylistCard = (props) => {
+  const { title, author, photo } = props.musicItem;
   return (
     <div className="music-card">
-      <img src={imageUrl} alt="Album Cover" className="music-avatar" />
+      <img src={photo} alt="Song image" className="music-avatar" />
       <div className="music-content">
         <h3 className="music-title">{title}</h3>
         <p className="music-author">{author}</p>
@@ -15,4 +15,4 @@ const MusicCard = (musicItem) => {
   );
 };
 
-export default MusicCard;
+export default PlaylistCard;
