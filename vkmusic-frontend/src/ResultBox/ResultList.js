@@ -1,6 +1,5 @@
 import PlaylistCard from "./Playlist/PlaylistCard";
 import MusicCard from "./Music/MusicCard";
-import './ResultList.css';
 
 const MusicList = (props) => {
     const resultList = props.resultList;
