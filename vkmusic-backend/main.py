@@ -1,4 +1,3 @@
-import os
 from enum import Enum
 from typing import List, Union
 
@@ -6,7 +5,7 @@ from fastapi import FastAPI, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import HTTPException
 from fastapi.param_functions import Depends, Query
-from pydantic import BaseModel, constr
+from pydantic import BaseModel
 
 from vkpymusic import clients, Service, ServiceAsync
 from vkpymusic.models import Song, Playlist
@@ -99,7 +98,7 @@ def search_music(search_request: SearchRequest):
     result: List[Union[Song, Playlist]]
     if type_value == SearchType.music:
         result = service.search_songs_by_text(
-            query, 12,
+            query, 20,
             )
     elif type_value == SearchType.album:
         result = service.search_albums_by_text(

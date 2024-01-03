@@ -1,4 +1,6 @@
 .playlist-card {
+    grid-column: span 2;
+
     position: relative;
     display: flex;
     flex-direction: column;
@@ -33,3 +35,21 @@
     opacity: 1;
   }
   
+  @media (max-width: 1400px) {
+    .playlist-card {
+      grid-column: span 3;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .playlist-card {
+      grid-column: span 4;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .playlist-card {
+      grid-column: span 6;
+    }
+  }
+
