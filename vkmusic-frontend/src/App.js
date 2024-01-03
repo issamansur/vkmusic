@@ -1,17 +1,3 @@
-import { Search, 
-  View, 
-  Panel, 
-  PanelHeader,
-  CardGrid,
-  Card,
-  Group,
-  Spacing,
-  Div
-} from '@vkontakte/vkui';
-import "@vkontakte/vkui/dist/vkui.css";
-
-import { Button, TextInput, Select } from "@gravity-ui/uikit";
-
 import { useState } from 'react';
 import axios from 'axios';
 
