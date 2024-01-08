@@ -7,6 +7,7 @@ import SearchBox from './SearchBox/SearchBox';
 import './App.css';
 
 const api = "http://localhost:8000/api";
+const api2 = "https://humble-space-dollop-59xgx6jqgwqhq4-8000.app.github.dev/api";
 
 function App() {
   const [resultList, setResultList] = useState([]);
@@ -21,7 +22,7 @@ function App() {
 
     const types = ['music', 'playlist', 'album'];
 
-    axios.post(`${api}/search`,
+    axios.post(`${api2}/search`,
     {
       token: token,
       type_value: types[type - 1],

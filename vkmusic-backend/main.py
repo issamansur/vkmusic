@@ -18,6 +18,7 @@ origins = [
     "https://localhost",
     "http://localhost:3000",
     "https://localhost:3000",
+    "https://humble-space-dollop-59xgx6jqgwqhq4-3000.app.github.dev",
 ]
 
 app.add_middleware(
@@ -68,7 +69,7 @@ def validate_token(token: str = Header(...)):
         clients['Kate'].user_agent,
         token
         )
-    if service.check_token() is False:
+    if service.is_token_valid() is False:
         raise HTTPException(status_code=400, detail="Invalid token.")
     return token
 
@@ -89,7 +90,7 @@ def search_music(search_request: SearchRequest):
         clients['Kate'].user_agent,
         token
         )
-    if service.check_token() is False:
+    if service.is_token_valid() is False:
         raise HTTPException(status_code=400, detail="Invalid token.")
 
     if not len(query) in range(1, 30):
