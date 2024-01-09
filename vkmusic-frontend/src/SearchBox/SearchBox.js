@@ -40,8 +40,9 @@ const SearchBox = (props) => {
         />;
     
     const ActionButton = <Button
-        title="Найти"
+        view="action"
         size="l"
+        title="Найти"
         onClick={handleButtonClick}>
             Найти
         </Button>;

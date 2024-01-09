@@ -47,6 +47,21 @@ def index():
     return {"message": "Hello World"}
 
 
+@app.get("/api/validate")
+async def validate_token(token: str = Header(None)):
+    if not token.startswith('VKMusic '):
+        raise InvalidTokenFormatError()
+
+    token = token[8:]
+    print(token)
+
+    is_valid: bool = ServiceAsync.is_token_valid(token)
+    if not is_valid:
+        raise InvalidTokenError()
+
+    return {"message": "Token is valid."}
+
+
 class SearchType(str, Enum):
     music = "music"
     album = "album"
@@ -75,7 +90,7 @@ def validate_token(token: str = Header(...)):
 
 
 @app.post("/api/search")
-def search_music(search_request: SearchRequest):
+def search(search_request: SearchRequest):
     token: str = search_request.token
     type_value: SearchType = search_request.type_value
     query: str = search_request.query
@@ -90,8 +105,6 @@ def search_music(search_request: SearchRequest):
         clients['Kate'].user_agent,
         token
         )
-    if service.is_token_valid() is False:
-        raise HTTPException(status_code=400, detail="Invalid token.")
 
     if not len(query) in range(1, 30):
         raise HTTPException(status_code=400, detail="Query is required.")

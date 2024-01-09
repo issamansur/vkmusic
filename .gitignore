@@ -131,3 +131,8 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# vkmusic-backend
+vkmusic-backend/errors/invalid_token.py
+vkmusic-backend/errors/__init__.py
+vkmusic-backend/errors/invalid_token_format.py
