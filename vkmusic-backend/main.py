@@ -4,11 +4,12 @@ from typing import List, Union
 from fastapi import FastAPI, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import HTTPException
-from fastapi.param_functions import Depends, Query
 from pydantic import BaseModel
 
 from vkpymusic import clients, Service, ServiceAsync
 from vkpymusic.models import Song, Playlist
+
+from errors import InvalidTokenError, InvalidTokenFormatError
 
 
 # Create a FastAPI instance and configure CORS
@@ -29,7 +30,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-'''
+
 @app.middleware("http")
 async def log_requests(request, call_next):
     response = await call_next(request)
@@ -39,7 +40,7 @@ async def log_requests(request, call_next):
     print("Response status code:", response.status_code)
     print("Response headers:", response.headers)
     return response
-'''
+
 
 
 @app.get("/")
@@ -47,19 +48,37 @@ def index():
     return {"message": "Hello World"}
 
 
-@app.get("/api/validate")
-async def validate_token(token: str = Header(None)):
+class CheckTokenRequest(BaseModel):
+    token: str
+
+class CheckTokenResponse(BaseModel):
+    userid: int
+    username: str
+
+
+@app.post("/api/validate")
+def validate_token(
+    check_request: CheckTokenRequest
+    ) -> CheckTokenResponse:
+    token: str = check_request.token
     if not token.startswith('VKMusic '):
         raise InvalidTokenFormatError()
 
     token = token[8:]
     print(token)
 
-    is_valid: bool = ServiceAsync.is_token_valid(token)
+    is_valid: bool = Service.check_token(token)
     if not is_valid:
         raise InvalidTokenError()
 
-    return {"message": "Token is valid."}
+    service: Service = Service(
+        clients['Kate'].user_agent,
+        token
+        )
+    (userid, username) = service.get_user_info()
+
+
+    return { "userid": userid, "username": username }
 
 
 class SearchType(str, Enum):
@@ -72,21 +91,6 @@ class SearchRequest(BaseModel):
     token: str
     type_value: SearchType
     query: str
-
-def validate_token(token: str = Header(...)):
-    if not token.startswith('VKMusic '):
-        raise HTTPException(status_code=400, detail="Token is required.")
-    else:
-        token = token[8:]
-        print(token)
-
-    service: ServiceAsync = Service(
-        clients['Kate'].user_agent,
-        token
-        )
-    if service.is_token_valid() is False:
-        raise HTTPException(status_code=400, detail="Invalid token.")
-    return token
 
 
 @app.post("/api/search")

@@ -1,62 +1,74 @@
 import { useState, useEffect } from 'react';
 
 import axios from 'axios';
-import { useToaster } from '@gravity-ui/uikit';
+import { Modal } from '@gravity-ui/uikit';
 
 import MusicList from './ResultBox/ResultList';
 import SearchBox from './SearchBox/SearchBox';
+import AuthToken from './AuthBox/AuthToken';
 
-import useToasterNotifications from './Notifications/TokenNotFoundNotification';
+import useNotifications from './Notifications/TokenNotification';
+
+import { API, API_GH, HEADERS, TYPES } from './config';
 
 import './App.css';
 
-const api = "http://localhost:8000/api";
-const api2 = "https://humble-space-dollop-59xgx6jqgwqhq4-8000.app.github.dev/api";
-
-const HEADERS = {
-  'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': 'http://localhost:3000',
-  'Access-Control-Allow-Credentials': 'true',
-};
-
-const TYPES = ['music', 'playlist', 'album'];
-
 
 function App() {
-  const { add } = useToaster();
-  const {isCanToSearch, setCanToSearch} = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
   const [resultList, setResultList] = useState([]);
-
+  const {
+    showTokenNotFound,
+    showTokenFormatInvalid,
+    showTokenExpired, 
+    } = useNotifications(onAuth);
+  
+  function onAuth() {
+    setIsAuth(true);
+    console.log('onAuth');
+  }
+  
   function checkAndGetToken() {
     const token = localStorage.getItem('token');
-    if (token) {
-      return token;
-    } else {
-      showTokenNotFoundError();
-      return null;
+    
+    if (!token) {
+      showTokenNotFound();
+      return;
     }
-  }
-
-  const { showTokenNotFoundError } = useToasterNotifications();
-
-  function searchQuery(query, type) {
-    let token = checkAndGetToken();
-    if (token) {
-      token = `VKMusic ${token}`;
-    } else {
-      showTokenNotFoundError();
+    
+    if (!token.startsWith('VKMusic ')) {
+      showTokenFormatInvalid();
       return;
     }
 
-    /*
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
-    headers.append('Access-Control-Allow-Credentials', 'true');
-    headers.append('Authorization', `VKMusic ${localStorage.getItem('token')}`);
-    */
+    axios.post(`${API_GH}/validate`, {
+      token: token,
+    }, 
+    {
+      headers: HEADERS,
+    }).then((response) => {
+      if (response.data) {
+        console.log(response.data);
+      }
+      else {
+        showTokenExpired();
+        return;
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
+
+    return token;
+  }
+
+
+  function searchQuery(query, type) {
+    let token = checkAndGetToken();
+    if (!token) {
+      return;
+    }
     let headers = HEADERS;
-    axios.post(`${api2}/search`,
+    axios.post(`${API_GH}/search`,
     {
       token: token,
       type_value: TYPES[type - 1],
@@ -86,6 +98,9 @@ function App() {
     <div className="App">
       <SearchBox onSearch={searchQuery} />
       <MusicList resultList={resultList} />
+      <Modal open={isAuth} onClose={() => setIsAuth(false)}>
+        <AuthToken />
+      </Modal>
     </div>
   );
 }

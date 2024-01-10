@@ -1,0 +1,13 @@
+.auth-token-modal {
+    padding: 20px;
+/*
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    */
+}
+
+.auth-token-modal > *:not(:first-child) {
+    margin-top: 20px;
+}
