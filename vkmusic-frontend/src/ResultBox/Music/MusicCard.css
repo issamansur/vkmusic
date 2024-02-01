@@ -3,9 +3,12 @@
   align-items: center;
   border: 1px solid #ddd;
   border-radius: 8px;
-  margin-bottom: 16px;
-  padding: 8px;
+  padding: 12px;
   background-color: #fff;
+}
+
+.music-card:hover {
+  transform: scale(1.01);
 }
 
 .music-icon {
@@ -24,6 +27,11 @@
 
 .music-content {
   flex-grow: 1;
+
+  /* Чтобы название песни не вылезало за пределы карточки */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .music-title {

@@ -93,7 +93,7 @@ def search_music(search_request: SearchRequest):
     if service.check_token() is False:
         raise HTTPException(status_code=400, detail="Invalid token.")
 
-    if not len(query) in range(1, 21):
+    if not len(query) in range(1, 30):
         raise HTTPException(status_code=400, detail="Query is required.")
 
     result: List[Union[Song, Playlist]]

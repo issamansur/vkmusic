@@ -1,62 +1,35 @@
-.music-card {
+.playlist-card {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 16px;
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 8px;
     transition: transform 0.2s ease-in-out;
   }
   
-  .music-card:hover {
-    transform: scale(1.05);
+  .playlist-card:hover {
+    transform: scale(1.01);
   }
   
-  .music-avatar {
+  .playlist-photo {
     width: 100%;
     height: auto;
     border-radius: 8px;
-    margin-bottom: 8px;
   }
   
-  .music-content {
+  .playlist-title {
     text-align: center;
-  }
-  
-  .music-title {
-    margin: 0;
-  }
-  
-  .music-author {
+    width: 100%;
+    white-space: nowrap; /* Запрещаем перенос текста на новую строку */
+    overflow: hidden; /* Обрезаем лишний текст */
+    text-overflow: ellipsis; /* Если текст слишком длинный, отображаем многоточие */
     margin: 8px 0;
-    color: #777;
+    height: 18px; /* Фиксированная высота заголовка */
   }
   
-  .play-button {
-    position: absolute;
-    bottom: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 4px;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-  }
-  
-  .music-card:hover .play-button {
+  .playlist-card:hover .playlist-button {
     opacity: 1;
-  }
-  
-  .play-button:hover {
-    background-color: #45a049;
   }
   

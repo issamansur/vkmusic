@@ -1,6 +1,8 @@
 import { TextInput, Button, Select } from "@gravity-ui/uikit";
 import { useState, useRef } from 'react';
 
+import './SearchBox.css';
+
 const SearchBox = (props) => {
     // Refs
     const inputRef = useRef();
@@ -38,10 +40,11 @@ const SearchBox = (props) => {
         />;
     
     const ActionButton = <Button
+        title="Найти"
         size="l"
         onClick={handleButtonClick}>
             Найти
-    </Button>;
+        </Button>;
 
     // Functions
     const search = (query) => {
@@ -50,7 +53,7 @@ const SearchBox = (props) => {
     }
 
     return (
-        <div>
+        <div className="search-container">
             <TextInput
                 controlRef={inputRef}
                 autoFocus={true}

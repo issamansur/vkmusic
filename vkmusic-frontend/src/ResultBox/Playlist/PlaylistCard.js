@@ -1,16 +1,19 @@
 import React from 'react';
-import './PlaylistCard.css'; // Файл со стилями
+import './PlaylistCard.css';
+import defaultIcon from '../../UI/Defaults/playlist.svg';
 
 const PlaylistCard = (props) => {
-  const { title, author, photo } = props.musicItem;
+  const { title, photo } = props.musicItem;
+  const photoUrl = photo !== '' ? photo : defaultIcon;
+
   return (
-    <div className="music-card">
-      <img src={photo} alt="Song image" className="music-avatar" />
-      <div className="music-content">
-        <h3 className="music-title">{title}</h3>
-        <p className="music-author">{author}</p>
-      </div>
-      <button className="play-button">Play</button>
+    <div className="playlist-card">
+      <img
+        className="playlist-photo"
+        src={photoUrl}
+        alt="Song image"
+      />
+      <h3 className="playlist-title">{title}</h3>
     </div>
   );
 };
