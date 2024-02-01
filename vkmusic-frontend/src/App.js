@@ -15,37 +15,43 @@ import { Button, TextInput, Select } from "@gravity-ui/uikit";
 import { useState } from 'react';
 import axios from 'axios';
 
-import MusicList from './MusicLists/MusicList';
+import MusicList from './ResultBox/ResultList';
 import SearchBox from './SearchBox/SearchBox';
 
 import './App.css';
 
-const api = "http://127.0.0.1:8000";
+const api = "http://localhost:8000/api";
 
 function App() {
-  const [searchText, setSearchText] = useState('');
-  const [musicList, setMusicList] = useState([]);
+  const [resultList, setResultList] = useState([]);
 
-  const onChange = (e) => {
-    setSearchText(e.target.value);
-  };
-
-  function searchQuery() {
+  function searchQuery(query, type) {
     let headers = new Headers();
-
     headers.append('Content-Type', 'application/json');
-    headers.append('Accept', 'application/json');
-  
     headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
     headers.append('Access-Control-Allow-Credentials', 'true');
+    headers.append('Authorization', `VKMusic ${localStorage.getItem('token')}`);
+    const token = `VKMusic ${localStorage.getItem('token')}`;
 
-    axios.get(`${api}/music/${searchText}`,
+    const types = ['music', 'playlist', 'album'];
+
+    axios.post(`${api}/search`,
     {
-      headers: headers
-    }
-    ).then((response) => {
+      token: token,
+      type_value: types[type - 1],
+      query: query,
+    },
+    {
+      headers: headers,
+    })
+    .then((response) => {
       console.log(response.data);
-      setMusicList(response.data);
+      if (response.data) {
+        const resultListWithTypes = response.data.map(
+          item => ({ type: types[type - 1], ...item })
+          );
+        setResultList(resultListWithTypes);
+      }
     }).catch((error) => {
       console.log(error);
     });
@@ -53,21 +59,8 @@ function App() {
 
   return (
     <div className="App">
-      <SearchBox />
-      {/*
-      <View activePanel="card">
-        <Panel id="card">
-          <PanelHeader>Музыка ВК</PanelHeader>
-          <Search
-            placeholder='Поиск по песне или исполнителю...'
-            //onChange={onChange}
-            onFindButtonClick={searchQuery} 
-          />
-          <MusicList musicList={[]} />
-          <Spacing size={16} />
-        </Panel>
-      </View>
-    */}
+      <SearchBox onSearch={searchQuery} />
+      <MusicList resultList={resultList} />
     </div>
   );
 }
